@@ -4,13 +4,14 @@ import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
 import ReferencePanel from './components/ReferencePanel';
 import { ChatSession, Message, Reference } from './types/chat';
+import { apiService } from './services/api';
 
 function App() {
   // State management
   const [sessions, setSessions] = useState<ChatSession[]>([
     {
       id: '1',
-      title: 'Chat 1',
+      title: 'New Chat',
       messages: [],
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -19,13 +20,17 @@ function App() {
   const [activeSessionId, setActiveSessionId] = useState<string>('1');
   const [currentReferences, setCurrentReferences] = useState<Reference[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Get active session
   const activeSession = sessions.find(s => s.id === activeSessionId);
   const messages = activeSession?.messages || [];
 
   // Handler for sending a message
-  const handleSendMessage = (content: string) => {
+  const handleSendMessage = async (content: string) => {
+    setError(null);
+    setIsLoading(true);
+
     const newMessage: Message = {
       id: Date.now().toString(),
       content,
@@ -41,17 +46,49 @@ function App() {
               ...session,
               messages: [...session.messages, newMessage],
               updatedAt: new Date(),
+              title: session.messages.length === 0 ? content.substring(0, 30) + '...' : session.title,
             }
           : session
       )
     );
 
-    // TODO: This will be replaced with actual API call in next step
-    // For now, add a mock response
-    setTimeout(() => {
-      const mockResponse: Message = {
+    try {
+      // Call the API
+      const response = await apiService.sendMessage({ question: content });
+
+      const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'This is a placeholder response. API integration coming in the next step!',
+        content: response.answer,
+        role: 'assistant',
+        timestamp: new Date(),
+        references: response.references,
+      };
+
+      // Add assistant response to active session
+      setSessions(prev =>
+        prev.map(session =>
+          session.id === activeSessionId
+            ? {
+                ...session,
+                messages: [...session.messages, assistantMessage],
+                updatedAt: new Date(),
+              }
+            : session
+        )
+      );
+
+      // Update references panel with new references
+      if (response.references && response.references.length > 0) {
+        setCurrentReferences(response.references);
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to get response from server';
+      setError(errorMessage);
+
+      // Add error message to chat
+      const errorMsg: Message = {
+        id: (Date.now() + 1).toString(),
+        content: `⚠️ Error: ${errorMessage}. Please make sure the backend server is running at ${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'}`,
         role: 'assistant',
         timestamp: new Date(),
       };
@@ -61,20 +98,22 @@ function App() {
           session.id === activeSessionId
             ? {
                 ...session,
-                messages: [...session.messages, mockResponse],
+                messages: [...session.messages, errorMsg],
                 updatedAt: new Date(),
               }
             : session
         )
       );
-    }, 1000);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handler for creating a new chat
   const handleNewChat = () => {
     const newSession: ChatSession = {
       id: Date.now().toString(),
-      title: `Chat ${sessions.length + 1}`,
+      title: 'New Chat',
       messages: [],
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -83,12 +122,25 @@ function App() {
     setSessions(prev => [...prev, newSession]);
     setActiveSessionId(newSession.id);
     setCurrentReferences([]);
+    setError(null);
   };
 
   // Handler for selecting a session
   const handleSessionSelect = (sessionId: string) => {
     setActiveSessionId(sessionId);
-    setCurrentReferences([]);
+    
+    // Load references from the last message with references in this session
+    const session = sessions.find(s => s.id === sessionId);
+    if (session) {
+      const messagesWithRefs = session.messages.filter(m => m.references && m.references.length > 0);
+      if (messagesWithRefs.length > 0) {
+        const lastMessageWithRefs = messagesWithRefs[messagesWithRefs.length - 1];
+        setCurrentReferences(lastMessageWithRefs.references || []);
+      } else {
+        setCurrentReferences([]);
+      }
+    }
+    setError(null);
   };
 
   return (
@@ -105,7 +157,14 @@ function App() {
           <ChatHistory
             sessions={sessions}
             activeSessionId={activeSessionId}
-            onSessionSelect={handleSessionSelect}
+            onSeError banner */}
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-8 my-4">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+
+            {/* ssionSelect={handleSessionSelect}
             onNewChat={handleNewChat}
           />
 
