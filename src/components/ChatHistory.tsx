@@ -8,6 +8,9 @@ interface ChatHistoryProps {
 }
 
 export default function ChatHistory({ sessions, activeSessionId, onSessionSelect, onNewChat }: ChatHistoryProps) {
+  // Show only the last 5 chats (most recent)
+  const recentSessions = sessions.slice(-5).reverse();
+
   return (
     <div className="w-1/5 border-r-2 border-gray-300 pl-20 flex flex-col">
       <div className="text-2xl font-bold mx-8 my-4 mb-8">Chat History</div>
@@ -20,15 +23,16 @@ export default function ChatHistory({ sessions, activeSessionId, onSessionSelect
       </button>
 
       <div className="flex flex-col overflow-y-auto">
-        {sessions.map((session, index) => (
+        {recentSessions.map((session) => (
           <button
             key={session.id}
             onClick={() => onSessionSelect(session.id)}
-            className={`rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ${
+            className={`rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-lg truncate ${
               activeSessionId === session.id ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'
             }`}
+            title={session.title}
           >
-            {session.title || `Chat ${index + 1}`}
+            {session.title}
           </button>
         ))}
       </div>

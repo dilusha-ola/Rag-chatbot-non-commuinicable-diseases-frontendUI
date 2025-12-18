@@ -3,7 +3,7 @@ import ChatHistory from './components/ChatHistory';
 import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
 import ReferencePanel from './components/ReferencePanel';
-import { ChatSession, Message } from './types/chat';
+import type { ChatSession, Message } from './types/chat';
 import { apiService } from './services/api';
 
 function App() {
@@ -114,18 +114,18 @@ function App() {
 
     setSessions(prev => [...prev, newSession]);
     setActiveSessionId(newSession.id);
-    setCurrentReferences([]);
     setError(null);
   };
 
   // Handler for selecting a session
   const handleSessionSelect = (sessionId: string) => {
+    setActiveSessionId(sessionId);
     setError(null);
   };
 
-  // Handler for selecting a session
-  const handleSessionSelect = (sessionId: string) => {
-    setActiveSessionId(sessionId); <div className="min-h-screen bg-gray-200">
+  return (
+    <>
+      <div className="min-h-screen bg-gray-200">
         {/* Header */}
         <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4 flex justify-center">
           NCD Health Assistant
@@ -137,14 +137,7 @@ function App() {
           <ChatHistory
             sessions={sessions}
             activeSessionId={activeSessionId}
-            onSeError banner */}
-            {error && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-8 my-4">
-                <strong>Error:</strong> {error}
-              </div>
-            )}
-
-            {/* ssionSelect={handleSessionSelect}
+            onSessionSelect={handleSessionSelect}
             onNewChat={handleNewChat}
           />
 
@@ -154,6 +147,13 @@ function App() {
             {messages.length === 0 && (
               <div className="text-2xl font-bold mx-8 my-4 flex justify-center text-blue-500">
                 Welcome to NCD Health Assistant! How can I assist you today?
+              </div>
+            )}
+
+            {/* Error banner */}
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mx-8 my-4">
+                <strong>Error:</strong> {error}
               </div>
             )}
 
@@ -179,7 +179,7 @@ function App() {
           </div>
 
           {/* References Panel */}
-          <ReferencePanel references={currentReferences} />
+          <ReferencePanel references={[]} />
         </div>
       </div>
     </>
@@ -187,4 +187,3 @@ function App() {
 }
 
 export default App;
-[]
