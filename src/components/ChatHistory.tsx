@@ -12,7 +12,7 @@ export default function ChatHistory({ sessions, activeSessionId, onSessionSelect
   const recentSessions = sessions.slice(-5).reverse();
 
   return (
-    <div className="w-1/5 border-r-2 border-gray-300 px-4 flex flex-col">
+    <div className="w-1/5 border-r-2 border-gray-400 px-4 flex flex-col">
       <div className="text-2xl font-bold my-4 mb-8">Chat History</div>
       
       <button

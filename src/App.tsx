@@ -143,7 +143,7 @@ function App() {
           />
 
           {/* Chat Area */}
-          <div className="w-3/5 border-r-2 border-gray-300 px-8 flex flex-col">
+          <div className="w-3/5 border-r-2 border-gray-400 px-8 flex flex-col">
             {/* Welcome message */}
             {messages.length === 0 && (
               <div className="text-2xl font-bold mx-8 my-4 flex justify-center text-blue-500">
