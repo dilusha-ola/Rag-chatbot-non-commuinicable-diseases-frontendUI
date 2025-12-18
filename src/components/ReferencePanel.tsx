@@ -1,4 +1,4 @@
-import { Reference } from '../types/chat';
+import type { Reference } from '../types/chat';
 import { FIXED_REFERENCES } from '../constants/references';
 
 interface ReferencePanelProps {
