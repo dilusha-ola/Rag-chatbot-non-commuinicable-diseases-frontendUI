@@ -3,7 +3,7 @@ import ChatHistory from './components/ChatHistory';
 import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
 import ReferencePanel from './components/ReferencePanel';
-import { ChatSession, Message, Reference } from './types/chat';
+import { ChatSession, Message } from './types/chat';
 import { apiService } from './services/api';
 
 function App() {
@@ -18,7 +18,6 @@ function App() {
     },
   ]);
   const [activeSessionId, setActiveSessionId] = useState<string>('1');
-  const [currentReferences, setCurrentReferences] = useState<Reference[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,7 +60,6 @@ function App() {
         content: response.answer,
         role: 'assistant',
         timestamp: new Date(),
-        references: response.references,
       };
 
       // Add assistant response to active session
@@ -76,11 +74,6 @@ function App() {
             : session
         )
       );
-
-      // Update references panel with new references
-      if (response.references && response.references.length > 0) {
-        setCurrentReferences(response.references);
-      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get response from server';
       setError(errorMessage);
@@ -127,25 +120,12 @@ function App() {
 
   // Handler for selecting a session
   const handleSessionSelect = (sessionId: string) => {
-    setActiveSessionId(sessionId);
-    
-    // Load references from the last message with references in this session
-    const session = sessions.find(s => s.id === sessionId);
-    if (session) {
-      const messagesWithRefs = session.messages.filter(m => m.references && m.references.length > 0);
-      if (messagesWithRefs.length > 0) {
-        const lastMessageWithRefs = messagesWithRefs[messagesWithRefs.length - 1];
-        setCurrentReferences(lastMessageWithRefs.references || []);
-      } else {
-        setCurrentReferences([]);
-      }
-    }
     setError(null);
   };
 
-  return (
-    <>
-      <div className="min-h-screen bg-gray-200">
+  // Handler for selecting a session
+  const handleSessionSelect = (sessionId: string) => {
+    setActiveSessionId(sessionId); <div className="min-h-screen bg-gray-200">
         {/* Header */}
         <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4 flex justify-center">
           NCD Health Assistant
@@ -207,3 +187,4 @@ function App() {
 }
 
 export default App;
+[]

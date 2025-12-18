@@ -41,7 +41,7 @@ class ApiService {
         },
         body: JSON.stringify({
           question: request.question,
-          return_sources: true, // Always get sources for references panel
+          return_sources: false, // Don't request sources from backend
         }),
       });
 
@@ -52,15 +52,9 @@ class ApiService {
 
       const data = await response.json();
       
-      // Transform backend response to frontend format
+      // Return only the answer, no references
       return {
         answer: data.answer,
-        references: data.sources?.map((source: any, index: number) => ({
-          id: `ref-${Date.now()}-${index}`,
-          title: `Source ${index + 1}`,
-          source: source.content.substring(0, 100) + '...',
-          url: source.source,
-        })),
       };
     } catch (error) {
       console.error('Send message error:', error);
