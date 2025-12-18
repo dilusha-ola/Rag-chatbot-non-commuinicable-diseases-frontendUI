@@ -1,4 +1,4 @@
-import { ChatRequest, ChatResponse } from '../types/chat';
+import type { ChatRequest, ChatResponse } from '../types/chat';
 
 // API Configuration
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
