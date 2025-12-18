@@ -7,7 +7,7 @@ function App() {
     <>
       <div className="min-h-screen  bg-gray-200">
         {/* Header */}
-        <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4">NCD Health Assistant</div>
+        <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4 flex justify-center">NCD Health Assistant</div>
         {/* Body */}
           <div className="flex w-full min-h-screen">
 
@@ -53,7 +53,12 @@ function App() {
                 
               {/*References section*/}
               <div className="w-1/5 flex flex-col pl-12">
-                <div className="text-2xl font-bold mx-8 my-4">References Section</div>
+                <div className="text-2xl font-bold mx-8 my-4 mb-20">References Section</div>
+                <p className="bg-blue-500 rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ">Ref 1</p>
+                  <p className="bg-blue-500 rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ">Ref 2</p>
+                  <p className="bg-blue-500 rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ">Ref 3</p>
+                  <p className="bg-blue-500 rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ">Ref 4</p>
+                  <p className="bg-blue-500 rounded-md px-2 py-2 mb-2 mr-16 flex justify-center text-white text-2xl ">Ref 5</p>
               </div>
           </div>
       </div>
