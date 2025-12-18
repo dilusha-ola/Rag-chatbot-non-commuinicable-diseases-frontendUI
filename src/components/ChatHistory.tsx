@@ -1,4 +1,4 @@
-import { ChatSession } from '../types/chat';
+import type { ChatSession } from '../types/chat';
 
 interface ChatHistoryProps {
   sessions: ChatSession[];
