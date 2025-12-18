@@ -1,4 +1,4 @@
-import { Reference } from '../types/chat';
+import type { Reference } from '../types/chat';
 
 /**
  * Fixed reference links for NCD resources
