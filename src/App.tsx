@@ -127,7 +127,8 @@ function App() {
     <>
       <div className="min-h-screen bg-gray-200">
         {/* Header */}
-        <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4 flex justify-center">
+        <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4 flex justify-center items-center gap-3">
+          <span className="text-4xl">🏥</span>
           NCD Health Assistant
         </div>
 
