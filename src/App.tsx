@@ -5,9 +5,13 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-ceneter bg-white">
-        <div className="w-100% h-10px bg-blue-500 ">
-          Hello World
+      <div className="min-h-screen  bg-white">
+        <div className="text-3xl text-white font-bold bg-blue-500 px-8 py-4">NCD Health Assistant</div>
+        <div>
+
+        </div>
+        <div>
+
         </div>
       </div>
         
