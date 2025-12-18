@@ -23,7 +23,8 @@ function App() {
 
               {/* Input Box */}
               <div className="w-3/5 border-r-2 border-gray-300 px-8 flex flex-col">
-               
+                 {/*welcome message*/}
+                  <div className="text-2xl font-bold mx-8 my-4 flex justify-center text-blue-500">Welcome to NCD Health Assistant! How can I assist you today?</div>
                 
                 {/* User message - right aligned */}
                 <div className="flex justify-end mb-4 mt-32">
@@ -39,7 +40,7 @@ function App() {
                 </div>
 
                 {/*search bar*/}
-                <div className="w-full mr-4 bg-white border border-gray-300 rounded-md px-4 py-2 mt-auto mb-8 flex items-center">
+                <div className="w-full mr-4 bg-white border border-gray-300 rounded-md px-4 py-2 mt-auto mb-24 flex items-center">
                   <input
                     type="text"
                     placeholder="Type your message..."
