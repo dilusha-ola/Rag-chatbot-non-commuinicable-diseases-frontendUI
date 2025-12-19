@@ -11,8 +11,8 @@ export default function ReferencePanel({ references, showFixedReferences = true 
   const displayReferences = showFixedReferences ? FIXED_REFERENCES : references;
 
   return (
-    <div className="w-1/5 flex flex-col pl-12 overflow-y-auto">
-      <div className="text-2xl font-bold mx-8 my-4 mb-8">References</div>
+    <div className="w-1/5 flex flex-col overflow-y-auto">
+      <div className="text-2xl font-bold px-8 my-4 mb-8">References</div>
       
       <div className="flex flex-col space-y-4 px-8 pb-8">
         {displayReferences.map((ref) => (
