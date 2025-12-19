@@ -1,9 +1,9 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { apiService } from '../services/api';
 
 describe('API Service', () => {
   beforeEach(() => {
-    global.fetch = vi.fn();
+    globalThis.fetch = vi.fn();
   });
 
   afterEach(() => {
@@ -15,7 +15,7 @@ describe('API Service', () => {
       answer: 'This is a test answer',
     };
 
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => mockResponse,
     });
@@ -23,7 +23,7 @@ describe('API Service', () => {
     const result = await apiService.sendMessage({ question: 'What is diabetes?' });
 
     expect(result.answer).toBe('This is a test answer');
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/chat'),
       expect.objectContaining({
         method: 'POST',
@@ -33,7 +33,7 @@ describe('API Service', () => {
   });
 
   it('should throw error on failed request', async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: false,
       statusText: 'Internal Server Error',
       json: async () => ({ detail: 'Server error' }),
@@ -48,7 +48,7 @@ describe('API Service', () => {
       message: 'Chatbot is ready',
     };
 
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
       json: async () => mockResponse,
     });
@@ -56,11 +56,11 @@ describe('API Service', () => {
     const result = await apiService.healthCheck();
 
     expect(result.status).toBe('healthy');
-    expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/health'));
+    expect(globalThis.fetch).toHaveBeenCalledWith(expect.stringContaining('/health'));
   });
 
   it('should test connection', async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    (globalThis.fetch as any).mockResolvedValueOnce({
       ok: true,
     });
 
@@ -70,7 +70,7 @@ describe('API Service', () => {
   });
 
   it('should return false on connection failure', async () => {
-    (global.fetch as any).mockRejectedValueOnce(new Error('Network error'));
+    (globalThis.fetch as any).mockRejectedValueOnce(new Error('Network error'));
 
     const result = await apiService.testConnection();
 
