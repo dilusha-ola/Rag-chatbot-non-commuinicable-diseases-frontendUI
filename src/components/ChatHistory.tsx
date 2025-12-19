@@ -5,9 +5,10 @@ interface ChatHistoryProps {
   activeSessionId?: string;
   onSessionSelect: (sessionId: string) => void;
   onNewChat: () => void;
+  onDeleteSession: (sessionId: string) => void;
 }
 
-export default function ChatHistory({ sessions, activeSessionId, onSessionSelect, onNewChat }: ChatHistoryProps) {
+export default function ChatHistory({ sessions, activeSessionId, onSessionSelect, onNewChat, onDeleteSession }: ChatHistoryProps) {
   // Show only the last 5 chats (most recent)
   const recentSessions = sessions.slice(-5).reverse();
 
@@ -24,18 +25,32 @@ export default function ChatHistory({ sessions, activeSessionId, onSessionSelect
 
       <div className="flex flex-col overflow-y-auto gap-2">
         {recentSessions.map((session) => (
-          <button
+          <div
             key={session.id}
-            onClick={() => onSessionSelect(session.id)}
-            className={`rounded-md px-3 py-2.5 text-left text-white text-base overflow-hidden ${
+            className={`rounded-md px-3 py-2.5 text-white text-base overflow-hidden flex items-center justify-between group ${
               activeSessionId === session.id ? 'bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'
             }`}
-            title={session.title}
           >
-            <div className="truncate">
+            <button
+              onClick={() => onSessionSelect(session.id)}
+              className="flex-1 text-left truncate"
+              title={session.title}
+            >
               {session.title}
-            </div>
-          </button>
+            </button>
+            {sessions.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteSession(session.id);
+                }}
+                className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-white hover:text-red-300 flex-shrink-0"
+                title="Delete chat"
+              >
+                🗑️
+              </button>
+            )}
+          </div>
         ))}
       </div>
     </div>

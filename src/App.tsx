@@ -149,6 +149,25 @@ function App() {
     setError(null);
   };
 
+  // Handler for deleting a session
+  const handleDeleteSession = (sessionId: string) => {
+    // Don't delete if it's the only session
+    if (sessions.length === 1) {
+      return;
+    }
+
+    // Filter out the deleted session
+    setSessions(prev => prev.filter(session => session.id !== sessionId));
+
+    // If we deleted the active session, switch to another one
+    if (activeSessionId === sessionId) {
+      const remainingSessions = sessions.filter(s => s.id !== sessionId);
+      if (remainingSessions.length > 0) {
+        setActiveSessionId(remainingSessions[remainingSessions.length - 1].id);
+      }
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gray-200">
@@ -166,6 +185,7 @@ function App() {
             activeSessionId={activeSessionId}
             onSessionSelect={handleSessionSelect}
             onNewChat={handleNewChat}
+            onDeleteSession={handleDeleteSession}
           />
 
           {/* Chat Area */}
