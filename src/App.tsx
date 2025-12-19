@@ -1,25 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ChatHistory from './components/ChatHistory';
 import ChatMessage from './components/ChatMessage';
 import ChatInput from './components/ChatInput';
 import ReferencePanel from './components/ReferencePanel';
 import type { ChatSession, Message } from './types/chat';
 import { apiService } from './services/api';
+import { storageService } from './utils/storage';
 
 function App() {
   // State management
-  const [sessions, setSessions] = useState<ChatSession[]>([
-    {
-      id: '1',
-      title: 'New Chat',
-      messages: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
-  const [activeSessionId, setActiveSessionId] = useState<string>('1');
+  const [sessions, setSessions] = useState<ChatSession[]>(() => {
+    // Load from localStorage on initial render
+    const savedSessions = storageService.loadSessions();
+    if (savedSessions && savedSessions.length > 0) {
+      return savedSessions;
+    }
+    // Default session if nothing saved
+    return [
+      {
+        id: '1',
+        title: 'New Chat',
+        messages: [],
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
+  });
+  const [activeSessionId, setActiveSessionId] = useState<string>(() => {
+    // Load active session ID from localStorage
+    const savedActiveId = storageService.loadActiveSessionId();
+    if (savedActiveId) {
+      return savedActiveId;
+    }
+    return '1';
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Save sessions to localStorage whenever they change
+  useEffect(() => {
+    storageService.saveSessions(sessions);
+  }, [sessions]);
+
+  // Save active session ID whenever it changes
+  useEffect(() => {
+    storageService.saveActiveSessionId(activeSessionId);
+  }, [activeSessionId]);
 
   // Get active session
   const activeSession = sessions.find(s => s.id === activeSessionId);
@@ -123,6 +149,25 @@ function App() {
     setError(null);
   };
 
+  // Handler for deleting a session
+  const handleDeleteSession = (sessionId: string) => {
+    // Don't delete if it's the only session
+    if (sessions.length === 1) {
+      return;
+    }
+
+    // Filter out the deleted session
+    setSessions(prev => prev.filter(session => session.id !== sessionId));
+
+    // If we deleted the active session, switch to another one
+    if (activeSessionId === sessionId) {
+      const remainingSessions = sessions.filter(s => s.id !== sessionId);
+      if (remainingSessions.length > 0) {
+        setActiveSessionId(remainingSessions[remainingSessions.length - 1].id);
+      }
+    }
+  };
+
   return (
     <>
       <div className="min-h-screen bg-gray-200">
@@ -140,6 +185,7 @@ function App() {
             activeSessionId={activeSessionId}
             onSessionSelect={handleSessionSelect}
             onNewChat={handleNewChat}
+            onDeleteSession={handleDeleteSession}
           />
 
           {/* Chat Area */}
