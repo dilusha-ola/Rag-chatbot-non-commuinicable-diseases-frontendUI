@@ -34,4 +34,10 @@ export const FIXED_REFERENCES: Reference[] = [
     source: 'Diabetes Information',
     url: 'https://diabetes.org/',
   },
+  {
+    id: 'fixed-ref-6',
+    title: 'American Heart Association',
+    source: 'Heart Attack Information',
+    url: 'https://www.heart.org/en/',
+  },
 ];
